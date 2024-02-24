@@ -5,9 +5,9 @@ export interface Task {
 }
 
 export interface Team {
-    id: string;
+  id: string;
 }
 
 export interface Round {
-    id: string;
+  id: string;
 }
