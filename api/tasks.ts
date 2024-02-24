@@ -1,11 +1,6 @@
 import { getDocs, query } from "firebase/firestore";
 import { tasks } from "../firebaseConfig";
-
-interface Task {
-  id: string;
-  name: string;
-  isCompleted: boolean;
-}
+import { Task } from "./models";
 
 async function getAllTasks() {
   const q = query(tasks);
@@ -21,5 +16,3 @@ async function getAllTasks() {
 }
 
 export { getAllTasks };
-
-export type { Task };

@@ -1,6 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Task, getAllTasks } from "../api/tasks";
+import { Task } from "../api/models";
+import { getAllTasks } from "../api/tasks";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]); // Make sure to create types globally instead of using any
