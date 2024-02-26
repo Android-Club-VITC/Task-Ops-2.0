@@ -1,7 +1,9 @@
 import { View, Text, ScrollView } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import { Task } from "../api/models";
 import { getAllTasks } from "../api/tasks";
+import LandingPage from "./Landing";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]); // Make sure to create types globally instead of using any
@@ -13,25 +15,17 @@ export default function Home() {
     })();
   }, []);
 
-  return (
-    <View className="flex-1 items-center justify-center bg-purple-100">
-      <Text className="text-2xl">Welcome to the task ops app! 🚀</Text>
+  const navigation = useNavigation();
 
-      <ScrollView className="flex-1 w-full mt-4 p-4 max-h-52">
-        {tasks.map((task) => {
-          return (
-            <View
-              key={task.id}
-              className="bg-white p-4 m-2  rounded-md shadow-md"
-            >
-              <Text className="text-lg text-center">{task.name}</Text>
-              <Text className="text-sm text-center">
-                {task.isCompleted ? "Completed" : "Not completed"}
-              </Text>
-            </View>
-          );
-        })}
-      </ScrollView>
-    </View>
+  useLayoutEffect(() => {
+      navigation.setOptions({
+        headerShown: false,
+      });
+  });
+
+  return (
+    <>
+    <LandingPage />
+    </>
   );
 }
