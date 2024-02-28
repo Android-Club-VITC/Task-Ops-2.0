@@ -41,7 +41,7 @@ const LeaderBoard = () => {
 
 
 {/* Top 3 teams */}
-<View className="flex-col justify-center mx-auto w-full">
+<View className="flex-col gap-2 justify-center mx-auto w-full">
     <View className="w-full mx-auto">
     <Image
         className="h-16 w-[90%] mx-auto"
