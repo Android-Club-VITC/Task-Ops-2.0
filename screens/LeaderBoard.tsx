@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import { Image, ImageBackground } from "expo-image";
+import { Image } from "expo-image";
 import * as React from "react";
 
 
