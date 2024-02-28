@@ -84,7 +84,7 @@ const LeaderBoard = () => {
 
 
 {/* Next 3 Teams */}
-<View className="flex mt-[10px]">
+<View className="flex gap-2 mt-[10px]">
 
 <View className="w-full mx-auto">
     <Image
