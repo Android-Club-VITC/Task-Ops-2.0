@@ -12,7 +12,7 @@ const getAllTeams = async () => {
       id: doc.id,
       ...doc.data(),
     };
-  }) as Team[];
+  }) as unknown as Team[];
 };
 
 export { getAllTeams };
