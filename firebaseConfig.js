@@ -17,5 +17,7 @@ const db = getFirestore(app);
 // see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
 
 const tasks = collection(db, "Tasks");
+const teams = collection(db, "Teams");
+const rounds = collection(db, "Rounds");
 
-export { app, tasks };
+export { app, tasks, teams, rounds };
