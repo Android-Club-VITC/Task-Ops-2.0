@@ -1,4 +1,4 @@
-import { addDoc, documentId, getDocs, query, where } from "firebase/firestore";
+import { addDoc, documentId, orderBy, getDocs, query, where } from "firebase/firestore";
 import {
   finalTaskList,
   normalTaskList,
@@ -50,6 +50,22 @@ export const loginTeam = async (name: string, password: string) => {
     id: team[0].id,
     ...teamData,
   };
+};
+
+const getLocalLeaderBoard = async (roundId: string) => {
+  const q = query(
+    teams,
+    where("round_id", "==", roundId),
+    orderBy("total_score", "desc")
+  );
+  const data = (await getDocs(q)).docs;
+  return data;
+};
+
+const getGlobalLeaderBoard = async (roundId: string) => {
+  const q = query(teams, orderBy("total_score", "desc"));
+  const data = (await getDocs(q)).docs;
+  return data;
 };
 
 export async function getTeamById(id: string) {
