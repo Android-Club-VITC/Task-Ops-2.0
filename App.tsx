@@ -45,7 +45,14 @@ export default function App() {
     >
       <NavigationContainer>
         {userId ? (
-          <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Navigator
+            screenOptions={{
+              headerShown: false,
+              tabBarActiveTintColor: "#000000",
+              tabBarInactiveTintColor: "lightgray",
+            }}
+            initialRouteName={"Tasks"}
+          >
             {/* <Tab.Screen
               name="Home"
               component={Home}
