@@ -14,6 +14,7 @@ export interface Team {
   total_score: number;
   is_sabotaged: boolean;
   sabotaged_task_id: number;
+  sabotage_team: boolean;
   is_final: boolean;
   sabotage_tasks: Task[];
   normal_tasks: Task[];
