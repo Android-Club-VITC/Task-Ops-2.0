@@ -7,7 +7,7 @@ const TaskPage = () => {
   return (
     <>
       <SafeAreaView>
-        <View className="bg-black h-[100%] w-[100%] mx-auto">
+        <View className="bg-black h-[100%] w-[100%] mx-auto  pt-[5%]">
           <View className="flex-row w-[90%] mx-auto mt-[2%]">
             <Image
               className="h-32 w-28"
