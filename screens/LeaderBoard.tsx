@@ -1,7 +1,7 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
+import { View, Text, SafeAreaView} from "react-native";
+import { Image} from "expo-image";
 import * as React from "react";
-
+import Navigation from "../components/Navigation"
 
 const LeaderBoard = () => {
   return (
@@ -41,7 +41,7 @@ const LeaderBoard = () => {
 
 
 {/* Top 3 teams */}
-<View className="flex-col gap-2 justify-center mx-auto w-full">
+<View className="flex-col justify-center mx-auto w-full">
     <View className="w-full mx-auto">
     <Image
         className="h-16 w-[90%] mx-auto"
@@ -84,7 +84,7 @@ const LeaderBoard = () => {
 
 
 {/* Next 3 Teams */}
-<View className="flex gap-2 mt-[10px]">
+<View className="flex mt-[10px]">
 
 <View className="w-full mx-auto">
     <Image
@@ -129,33 +129,7 @@ const LeaderBoard = () => {
 
 
 {/* Navigation Bar (bottom) */}
-<View className="bg-white absolute bottom-[10px] w-[100%] h-[5%] rounded-2xl flex-row justify-around items-center">
-    <TouchableOpacity className="w-[45%] flex-row justify-around items-center">
-    <Image
-        className="h-4 w-4 mx-auto my-auto"
-        contentFit="cover"
-        source={require("../assets/percentage.svg")}
-      />
-      <Text className="text-black text-[12px]"> Progress </Text>
-    </TouchableOpacity>
-
-    
-    <Image
-        className="h-6 w-4 mx-auto my-auto"
-        contentFit="cover"
-        source={require("../assets/bars-leader.svg")}
-      />
-
-<TouchableOpacity className="w-[45%] flex-row items-center justify-around mr-[5px]">
-    <Image
-        className="h-4 w-4 mx-auto"
-        contentFit="cover"
-        source={require("../assets/list.svg")}
-      />
-      <Text className="text-black text-[12px]"> Leaderboard </Text>
-
-    </TouchableOpacity>
-</View>
+<Navigation />
 
 
     </View>
