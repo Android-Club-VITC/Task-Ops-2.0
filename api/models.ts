@@ -22,7 +22,7 @@ export interface Team {
 }
 
 export interface Round {
-  id: number;
+  id: string;
   round_name: string;
   is_active: boolean;
   is_final: boolean;
