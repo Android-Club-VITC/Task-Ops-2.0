@@ -9,19 +9,26 @@ async function getActiveTeams() {
 
   const activeRoundIds = activeRoundsDocs.map((doc) => doc.id);
 
-  // findinf all teams that are in the active rounds
-  let activeTeams: any[] = [];
+  // Find all teams that are in the active rounds and not sabotaged
+  let activeTeams: Team[] = [];
   for (const roundId of activeRoundIds) {
-    const teamsInRoundQuery = query(teams, where("round_id", "==", roundId));
+    const teamsInRoundQuery = query(
+      teams,
+      where("round_id", "==", roundId),
+      where("is_sabotaged", "==", false)
+    );
     const teamsInRoundDocs = (await getDocs(teamsInRoundQuery)).docs;
     const teamsData = teamsInRoundDocs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
-    })) as unknown as Team[]; //remove the unknown after the Team structure is defined
+    })) as unknown as Team[]; //remove the unknow in future 
     activeTeams = activeTeams.concat(teamsData);
   }
 
-  return activeTeams;
+  // Filter teams that are both in an active round and not sabotaged
+  const activeNonSabotagedTeams = activeTeams.filter(team => !team.is_sabotaged);
+
+  return activeNonSabotagedTeams;
 }
 
 export { getActiveTeams };
