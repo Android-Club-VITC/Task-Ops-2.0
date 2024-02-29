@@ -1,4 +1,4 @@
-import { addDoc, getDocs, query, where } from "firebase/firestore";
+import { addDoc, documentId, getDocs, query, where } from "firebase/firestore";
 import {
   finalTaskList,
   normalTaskList,
@@ -31,9 +31,12 @@ export async function registerTeam(
     recently_solved_timestamp: new Date().getUTCSeconds(),
   };
 
-  const createdTeam = await addDoc(teams, payload);
-
-  return createdTeam.id;
+  try {
+    const createdTeam = await addDoc(teams, payload);
+    return createdTeam.id;
+  } catch (e) {
+    throw new Error("Some Error Occurred! Please Contact Admin!");
+  }
 }
 
 export const loginTeam = async (name: string, password: string) => {
@@ -48,3 +51,19 @@ export const loginTeam = async (name: string, password: string) => {
     ...teamData,
   };
 };
+
+export async function getTeamById(id: string) {
+  try {
+    const q = query(teams, where(documentId(), "==", id));
+
+    const teamInfo = (await getDocs(q)).docs;
+
+    if (teamInfo.length === 0) {
+      return null;
+    }
+
+    return teamInfo[0].data() as unknown as Team;
+  } catch (e) {
+    return null;
+  }
+}

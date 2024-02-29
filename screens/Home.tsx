@@ -1,35 +1,37 @@
-import { View, Text, ScrollView } from "react-native";
-import React, { useEffect, useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import { View, Text, TouchableOpacity, ToastAndroid } from "react-native";
+import React, { useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
 import { Task } from "../api/models";
-// import { getAllTasks } from "../api/tasks";
-import LandingPage from "./Landing";
-import LeaderBoard from "./LeaderBoard";
-import Progress from "./Progress";
+import { getTasksForTeam } from "../api/tasks";
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([]); // Make sure to create types globally instead of using any
+  const { userId, setUserId } = React.useContext(UserContext);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const tasks = await getAllTasks();
-  //     setTasks(tasks);
-  //   })();
-  // }, []);
-
-  const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-      navigation.setOptions({
-        headerShown: false,
-      });
-  });
-
+  useEffect(() => {
+    (async function () {
+      if (!userId) {
+        return;
+      }
+      const t = await getTasksForTeam(userId);
+      setTasks(t.data);
+    })();
+  }, []);
   return (
-    <>
-    <LandingPage />
-    {/* <LeaderBoard /> */}
-    {/* <Progress /> */}
-    </>
+    <View className="flex-1">
+      <Text>Home</Text>
+      <TouchableOpacity
+        className="mx-auto my-auto bg-red-500 p-2 rounded-md"
+        onPress={() => {
+          setUserId(null);
+        }}
+      >
+        <Text>Logout</Text>
+      </TouchableOpacity>
+
+      <Text className="text-center text-3xl text-black">
+        {JSON.stringify(tasks.map((t) => t.name))}
+      </Text>
+    </View>
   );
 }
