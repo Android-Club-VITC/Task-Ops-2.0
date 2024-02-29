@@ -1,18 +1,16 @@
-import {
-  Text,
-  TextInput,
-  ToastAndroid,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import React, { useContext, useState } from "react";
-import { Image } from "expo-image";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState, useCallback, useContext } from "react";
+import { StyleSheet, Text, View, TextInput, ToastAndroid } from "react-native";
+// import { useFonts } from 'expo-font';
+// import * as SplashScreen from 'expo-splash-screen';
+import Background from "../components/Background";
+import Input from "../components/Input";
+import Button from "../components/Button";
 import { loginTeam } from "../api/teams";
-import { delay } from "../utils/helpers";
 import { UserContext } from "../context/UserContext";
+import { delay } from "../utils/helpers";
+//SplashScreen.preventAutoHideAsync();
 
-export default function Login() {
+const Login = () => {
   const [teamName, setTeamName] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const { setUserId } = useContext(UserContext);
@@ -37,44 +35,61 @@ export default function Login() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
-      <Image
-        contentFit="contain"
-        className="flex-1 mt-12 absolute h-screen w-[100vw] bg-black"
-        contentPosition={"bottom"}
-        source={require("../assets/auth_bg.png")}
-      />
-      <Text className="uppercase text-6xl mt-20 font-aldrich font-thin text-center text-accent">
-        LOGIN
-      </Text>
-
-      <View className="relative w-full top-5 inset-0 mx-auto my-auto space-y-10">
-        <TextInput
-          className="w-[70%] mx-auto h-12 bg-white rounded-xl text-2xl p-2"
-          placeholder="Team Name"
-          onChange={(e) => {
-            setTeamName(e.nativeEvent.text);
-          }}
-        />
-        <TextInput
-          textContentType="password"
-          secureTextEntry={true}
-          className="w-[70%] mx-auto h-12 bg-white rounded-xl text-2xl p-2"
-          placeholder="Password"
-          onChange={(e) => {
-            setPassword(e.nativeEvent.text);
-          }}
+    <Background>
+      <View style={styles.container}>
+        <Text style={styles.heading}>LOGIN</Text>
+        <View className="relative w-full top-5 inset-0 mx-auto my-auto space-y-10">
+          <TextInput
+            className="w-[70%] mx-auto h-12 bg-white rounded-xl text-2xl p-2"
+            placeholder="Team Name"
+            onChange={(e) => {
+              setTeamName(e.nativeEvent.text);
+            }}
+          />
+          <TextInput
+            textContentType="password"
+            secureTextEntry={true}
+            className="w-[70%] mx-auto h-12 bg-white rounded-xl text-2xl p-2"
+            placeholder="Password"
+            onChange={(e) => {
+              setPassword(e.nativeEvent.text);
+            }}
+          />
+        </View>
+        <Button
+          label={"SUBMIT"}
+          TextColor={"black"}
+          Margin={100}
+          Press={() => {}}
         />
       </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          submit();
-        }}
-        className="relative w-[70%] mx-auto h-14 bg-white rounded-xl bottom-10"
-      >
-        <Text className="text-3xl text-center my-auto font-bold">SUBMIT</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
+    </Background>
   );
-}
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: 400,
+    marginVertical: 100,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  heading: {
+    color: "#43FFFF",
+    fontSize: 64,
+    // top:108,
+    // left:60,
+    textAlign: "center",
+    marginBottom: 150,
+    //fontFace:"Aldrich",
+  },
+
+  input: {
+    marginTop: 120,
+  },
+});
+
+export default Login;
