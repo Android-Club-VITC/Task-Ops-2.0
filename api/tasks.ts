@@ -52,9 +52,9 @@ export async function getTasksForTeam(team_id: string) {
           return errorResponse("No Task Found For Sabotage!");
         }
 
-        return successResponse([sab_tasks], "success");
+        return successResponse([sab_tasks], "sabotaged");
       } else {
-        return successResponse(team.normal_tasks, "success");
+        return successResponse(team.normal_tasks, "normal");
       }
     }
   } catch (e) {

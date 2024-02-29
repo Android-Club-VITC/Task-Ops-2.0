@@ -16,6 +16,7 @@ export interface Team {
   sabotaged_task_id: number;
   is_final: boolean;
   sabotage_tasks: Task[];
+  can_sabotage: boolean;
   normal_tasks: Task[];
   final_tasks: Task[];
   recently_solved_timestamp: number;

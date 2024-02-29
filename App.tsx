@@ -8,6 +8,8 @@ import Register from "./screens/Register";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import Home from "./screens/Home";
 import { UserContext } from "./context/UserContext";
+import LeaderBoard from "./screens/LeaderBoard";
+import Progress from "./screens/Progress";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +48,8 @@ export default function App() {
         >
           {userId ? (
             <>
-              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="Progress" component={Progress} />
+              <Stack.Screen name="Leaderboard" component={LeaderBoard} />
             </>
           ) : (
             <>
