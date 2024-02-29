@@ -5,6 +5,7 @@ import { Task } from "../api/models";
 import { getAllTasks } from "../api/tasks";
 import LandingPage from "./Landing";
 import LeaderBoard from "./LeaderBoard";
+import Progress from "./Progress";
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]); // Make sure to create types globally instead of using any
@@ -28,6 +29,7 @@ export default function Home() {
     <>
     <LandingPage />
     {/* <LeaderBoard /> */}
+    {/* <Progress /> */}
     </>
   );
 }
