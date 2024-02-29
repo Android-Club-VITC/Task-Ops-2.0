@@ -12,6 +12,7 @@ export interface Team {
   password: string;
   round_id: number;
   total_score: number;
+  sabotage_team: boolean;
   is_sabotaged: boolean;
   sabotaged_task_id: number;
   is_final: boolean;
