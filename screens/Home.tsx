@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, ToastAndroid } from "react-native";
 import React, { useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
-import { getCurrentActiveRound } from "../api/rounds";
 import { Task } from "../api/models";
 import { getTasksForTeam } from "../api/tasks";
 
@@ -30,7 +29,9 @@ export default function Home() {
         <Text>Logout</Text>
       </TouchableOpacity>
 
-      <Text className="text-center text-3xl text-black"></Text>
+      <Text className="text-center text-3xl text-black">
+        {JSON.stringify(tasks.map((t) => t.name))}
+      </Text>
     </View>
   );
 }

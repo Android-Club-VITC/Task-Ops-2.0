@@ -2,38 +2,42 @@ import { Task } from "./models";
 import { getCurrentActiveRound } from "./rounds";
 import { getTeamById } from "./teams";
 
+function successResponse(data: Task[], message: string) {
+  return {
+    message,
+    data,
+    success: true,
+  };
+}
+
+function errorResponse(message: string) {
+  return {
+    message,
+    data: [] as Task[],
+    success: false,
+  };
+}
+
 export async function getTasksForTeam(team_id: string) {
   try {
     const roundWhichIsActive = await getCurrentActiveRound();
 
     if (!roundWhichIsActive) {
-      return {
-        message: "Your Round Has not started yet!",
-        data: [],
-      };
+      return errorResponse("Your Round Has not started yet!");
     }
 
     const team = await getTeamById(team_id);
 
     if (!team) {
-      return {
-        message: `No user found with id ${team_id}`,
-        data: [],
-      };
+      return errorResponse(`No user found with id ${team_id}`);
     }
 
     if (team.round_id !== Number(roundWhichIsActive.id)) {
-      return {
-        message: "Your Round Has not started yet!",
-        data: [],
-      };
+      return errorResponse("Your Round Has not started yet!");
     }
 
     if (roundWhichIsActive.is_final) {
-      return {
-        message: "success",
-        data: team.final_tasks,
-      };
+      return successResponse(team.final_tasks, "success");
     } else {
       if (team.is_sabotaged) {
         const sab_tasks = team.sabotage_tasks.find((t) => {
@@ -45,21 +49,12 @@ export async function getTasksForTeam(team_id: string) {
         });
 
         if (!sab_tasks) {
-          return {
-            message: "No Task Found For Sabotage!",
-            data: [],
-          };
+          return errorResponse("No Task Found For Sabotage!");
         }
 
-        return {
-          message: "success",
-          data: [sab_tasks],
-        };
+        return successResponse([sab_tasks], "success");
       } else {
-        return {
-          message: "success",
-          data: team.normal_tasks,
-        };
+        return successResponse(team.normal_tasks, "success");
       }
     }
   } catch (e) {
