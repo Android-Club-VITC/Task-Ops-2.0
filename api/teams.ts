@@ -1,4 +1,11 @@
-import { addDoc, documentId, orderBy, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  documentId,
+  orderBy,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import {
   finalTaskList,
   normalTaskList,
@@ -23,6 +30,7 @@ export async function registerTeam(
     total_score: 0,
     is_sabotaged: false,
     sabotaged_task_id: 0,
+    can_sabotage: false,
     is_final: false,
 
     sabotage_tasks: [...sabotageTaskList],
@@ -62,10 +70,23 @@ const getLocalLeaderBoard = async (roundId: string) => {
   return data;
 };
 
-const getGlobalLeaderBoard = async (roundId: string) => {
-  const q = query(teams, orderBy("total_score", "desc"));
+export const getGlobalLeaderBoard = async () => {
+  const q = query(teams);
   const data = (await getDocs(q)).docs;
-  return data;
+
+  const d = data
+    .sort((a, b) => {
+      if (a.data().total_score === b.data().total_score) {
+        return (
+          a.data().recently_solved_timestamp -
+          b.data().recently_solved_timestamp
+        );
+      }
+      return b.data().total_score - a.data().total_score;
+    })
+    .map((d) => d.data());
+
+  return d as unknown as Team[];
 };
 
 export async function getTeamById(id: string) {
