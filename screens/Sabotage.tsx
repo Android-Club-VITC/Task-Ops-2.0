@@ -71,7 +71,7 @@ export default function Sabotage() {
                 <FlatList
                   data={teams}
                   renderItem={({ item, index }) => (
-                    <View className="flex">
+                    <View className="flex flex-row items-center">
                       <Text className="text-white">
                         {index + 1} {item.name}
                       </Text>
