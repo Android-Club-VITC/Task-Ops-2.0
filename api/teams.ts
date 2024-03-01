@@ -99,7 +99,10 @@ export async function getTeamById(id: string) {
       return null;
     }
 
-    return teamInfo[0].data() as unknown as Team;
+    return {
+      ...teamInfo[0].data(),
+      id: teamInfo[0].id,
+    } as unknown as Team;
   } catch (e) {
     return null;
   }

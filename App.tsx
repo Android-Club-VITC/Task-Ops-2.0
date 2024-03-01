@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,6 +14,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { Task } from "./api/models";
 import { TaskContext } from "./context/TaskContext";
+import Sabotage from "./screens/Sabotage";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -115,6 +115,16 @@ export default function App() {
                           ),
                         }}
                       />
+                      <Tab.Screen
+                        name="Sabotage"
+                        component={Sabotage}
+                        options={{
+                          tabBarLabel: "Sabotage",
+                          tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="skull" color={color} size={size} />
+                          ),
+                        }}
+                      />
                     </Tab.Navigator>
                   )}
                 </HomeStack.Screen>
@@ -131,7 +141,6 @@ export default function App() {
               <Stack.Screen name="Register" component={Register} />
             </Stack.Navigator>
           )}
-          <StatusBar style="auto" />
         </NavigationContainer>
       </UserContext.Provider>
     </TaskContext.Provider>
