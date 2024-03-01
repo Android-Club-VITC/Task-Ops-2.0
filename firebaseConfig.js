@@ -14,8 +14,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 // For more information on how to access Firebase in your project,
-// see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
-
+// see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebas
 const tasks = collection(db, "Tasks");
 const teams = collection(db, "Teams");
 const rounds = collection(db, "Rounds");
