@@ -47,6 +47,7 @@ const Progress = () => {
       setIsSabotaged(false);
       ToastAndroid.show("Tasks updated", ToastAndroid.SHORT);
     } else {
+      setActivity([]);
       ToastAndroid.show(tasks.message, ToastAndroid.SHORT);
     }
   };
