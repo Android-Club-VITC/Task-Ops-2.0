@@ -19,18 +19,26 @@ export default function Sabotage() {
   const [canSabotage, setCanSabotage] = useState(true);
 
   useEffect(() => {
-    (async function () {
-      try {
-        const loggedInTeam = await getTeamById(userId ?? "");
-        setCanSabotage(loggedInTeam?.can_sabotage ?? false);
-
-        const t = await getGlobalLeaderBoard();
-        setTeams(t.filter((team) => team.name == loggedInTeam?.name));
-      } catch (e) {
-        console.log("error", e);
-      }
-    })();
+    fetchSabotageStatus();
   }, []);
+
+  const fetchSabotageStatus = async () => {
+    try {
+      const loggedInTeam = await getTeamById(userId ?? "");
+      //   setCanSabotage(loggedInTeam?.can_sabotage ?? false);
+      setCanSabotage(true);
+
+      const t = await getGlobalLeaderBoard();
+      setTeams(t.filter((team) => team.name !== loggedInTeam?.name));
+    } catch (e) {
+      console.log("error", e);
+    }
+  };
+
+  const sabotageTeam = (teamName: string) => {
+    if (!canSabotage) return;
+    // call teh method
+  };
 
   return (
     <SafeAreaView>
@@ -60,20 +68,31 @@ export default function Sabotage() {
                 <FlatList
                   data={teams}
                   renderItem={({ item, index }) => (
-                    <View>
-                      <Text>
+                    <View className="flex">
+                      <Text className="text-white">
                         {index + 1} {item.name}
                       </Text>
-                      <Button>Sabotage</Button>
+                      <Button onPress={() => sabotageTeam(item.name)}></Button>
                     </View>
                   )}
                 />
               </View>
             </View>
           ) : (
-            <Text>You are not eligible to sabotage</Text>
+            <Text className="text-white">You are not eligible to sabotage</Text>
           )}
         </View>
+        <TouchableOpacity
+          className="absolute flex flex-row p-3 items-center gap-x-5 bg-secondary rounded-xl justify-center bottom-5"
+          onPress={fetchSabotageStatus}
+        >
+          <Image
+            className="h-8 w-8"
+            contentFit="cover"
+            source={require("../assets/refresh.svg")}
+          />
+          <Text className="text-white text-xl mr-3">Refresh</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
