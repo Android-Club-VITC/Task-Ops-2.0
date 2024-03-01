@@ -61,7 +61,7 @@ const finalTaskList = [
   {
     id: 10,
     name: "Glass Maze",
-    description: "AB3 portico",
+    description: "half done study spot",
     points: 0,
     secret: "wqdwlo",
     status: "not-opened",
@@ -77,7 +77,7 @@ const finalTaskList = [
   {
     id: 12,
     name: "Higher Lower Game",
-    description: "ping pong, ping pong",
+    description: "AB1 portico",
     points: 0,
     secret: "xaxuyh",
     status: "not-opened",
