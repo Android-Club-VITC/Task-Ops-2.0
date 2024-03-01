@@ -9,7 +9,8 @@ import {
 import { Image } from "expo-image";
 import React, { useEffect, useState } from "react";
 import { Team } from "../api/models";
-import { getGlobalLeaderBoard } from "../api/teams";
+import { UserContext } from "../context/UserContext";
+import { getGlobalLeaderBoard, getTeamById } from "../api/teams";
 
 function Top3Teams({ team, index }: { team: Team; index: number }) {
   return (
@@ -20,11 +21,11 @@ function Top3Teams({ team, index }: { team: Team; index: number }) {
         source={require("../assets/leadertop.png")}
       />
 
-      <View className="flex-row justify-around w-full items-center px-auto absolute top-7">
-        <Text className="text-[#43FFFF] text-ellipsis max-w-xs text-[14px] text-center">
+      <View className="flex-row justify-around w-full items-center px-auto absolute top-4">
+        <Text className="text-[#FFFFFF] text-ellipsis font-bold max-w-xs text-[15px] text-center">
           {index}. {team.name}
         </Text>
-        <Text className="text-[#43FFFF]  text-[14px] text-center">
+        <Text className="text-[#FFFFFF]  text-[19px] font-bold text-center top-1">
           {team.total_score}
         </Text>
       </View>
@@ -41,11 +42,11 @@ function Next3Teams({ team, index }: { team: Team; index: number }) {
         source={require("../assets/leaderbottom.svg")}
       />
 
-      <View className="flex-row justify-around px-auto absolute top-[5px] left-[20%]">
-        <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">
+      <View className="flex-row justify-between px-auto absolute top-[5px] left-[10%] w-4/5">
+        <Text className="text-[#FFFFFF] text-[14px] font-bold text-center mr-[98px] ml-[2px]">
           {index}. {team.name}
         </Text>
-        <Text className="text-[#43FFFF] text-[14px] text-center">
+        <Text className="text-[#FFFFFF] text-[14px] font-bold right-0">
           {team.total_score}
         </Text>
       </View>
@@ -54,13 +55,19 @@ function Next3Teams({ team, index }: { team: Team; index: number }) {
 }
 
 const LeaderBoard = () => {
+  const { userId } = React.useContext(UserContext);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [userScore, setUserScore] = useState(0);
 
   useEffect(() => {
     (async function () {
       try {
         const t = await getGlobalLeaderBoard();
         setTeams(t);
+        const loggedInTeam = await getTeamById(userId ?? "");
+        const points = t.filter((team) => team.name == loggedInTeam?.name)[0]
+          .total_score;
+        setUserScore(points);
       } catch (e) {
         console.log("error", e);
       }
@@ -90,10 +97,16 @@ const LeaderBoard = () => {
           />
         </View>
 
+        <View className="flex-row w-full justify-around mt-[5px]">
+          <Text className="text-[#d8d8d8] text-[20px] text-center font-bold">
+            Your Score: {userScore}
+          </Text>
+        </View>
+
         {/* Ranks and Points Header */}
-        <View className="flex-row w-full justify-around mt-[60px]">
-          <Text className="text-[#43FFFF] text-[20px] text-center">RANK</Text>
-          <Text className="text-[#43FFFF] text-[20px] text-center">POINTS</Text>
+        <View className="flex-row w-full justify-around mt-[10px]">
+          <Text className="text-[#43FFFF] text-[15px] text-center">RANK</Text>
+          <Text className="text-[#43FFFF] text-[15px] text-center">POINTS</Text>
         </View>
 
         {/* Top 3 teams */}
