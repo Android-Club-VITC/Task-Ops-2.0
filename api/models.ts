@@ -1,28 +1,30 @@
 export interface Task {
-  id: string;
+  id: number;
   name: string;
   description: string;
-  submission_key: string;
-}
-
-export interface Task_Team {
-  task_id: number;
   points: number;
-  status: "completed" | "viewed" | "unopened";
+  secret: string;
+  status: string;
 }
 
 export interface Team {
   name: string;
-  round_id: number;
   password: string;
+  round_id: number;
   total_score: number;
-  sabotaged_by: number;
   is_sabotaged: boolean;
-  eligible_for_next_round: boolean;
-  tasks: Task_Team[];
+  sabotaged_task_id: number;
+  is_final: boolean;
+  sabotage_tasks: Task[];
+  can_sabotage: boolean;
+  normal_tasks: Task[];
+  final_tasks: Task[];
+  recently_solved_timestamp: string;
 }
 
 export interface Round {
   id: string;
-  is_started: boolean;
+  round_name: string;
+  is_active: boolean;
+  is_final: boolean;
 }

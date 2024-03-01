@@ -1,166 +1,155 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  ToastAndroid,
+} from "react-native";
 import { Image } from "expo-image";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+import { Team } from "../api/models";
+import { UserContext } from "../context/UserContext";
+import { getGlobalLeaderBoard, getTeamById } from "../api/teams";
 
+function Top3Teams({ team, index }: { team: Team; index: number }) {
+  return (
+    <View className="w-full mx-auto mt-5">
+      <Image
+        className="h-16 w-[100%] mx-auto"
+        contentFit="cover"
+        source={require("../assets/leadertop.png")}
+      />
+
+      <View className="flex-row justify-around w-full items-center px-auto absolute top-4">
+        <Text className="text-[#FFFFFF] text-ellipsis font-bold max-w-xs text-[15px] text-center">
+          {index}. {team.name}
+        </Text>
+        <Text className="text-[#FFFFFF]  text-[19px] font-bold text-center top-1">
+          {team.total_score}
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function Next3Teams({ team, index }: { team: Team; index: number }) {
+  return (
+    <View className="w-full mt-5 mx-auto">
+      <Image
+        className="h-8 w-[90%] mx-auto"
+        contentFit="cover"
+        source={require("../assets/leaderbottom.svg")}
+      />
+
+      <View className="flex-row justify-between px-auto absolute top-[5px] left-[10%] w-4/5">
+        <Text className="text-[#FFFFFF] text-[14px] font-bold text-center mr-[98px] ml-[2px]">
+          {index}. {team.name}
+        </Text>
+        <Text className="text-[#FFFFFF] text-[14px] font-bold right-0">
+          {team.total_score}
+        </Text>
+      </View>
+    </View>
+  );
+}
 
 const LeaderBoard = () => {
+  const { userId } = React.useContext(UserContext);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [userScore, setUserScore] = useState(0);
+
+  useEffect(() => {
+    (async function () {
+      try {
+        const t = await getGlobalLeaderBoard();
+        setTeams(t);
+        const loggedInTeam = await getTeamById(userId ?? "");
+        const points = t.filter((team) => team.name == loggedInTeam?.name)[0]
+          .total_score;
+        setUserScore(points);
+      } catch (e) {
+        console.log("error", e);
+      }
+    })();
+  }, []);
+
   return (
     <SafeAreaView>
-    <View className="bg-black h-[100%] overflow-hidden flex flex-col">
+      <View className="bg-black h-[100%] overflow-hidden flex flex-col items-center">
+        {/* Leader Header Section */}
 
-      {/* Leader Header Section */}
+        <View className="flex-row justify-between w-full mt-12">
+          <Image
+            className="h-48 w-16 mt-[2px]"
+            contentFit="cover"
+            source={require("../assets/leaderboard-header.svg")}
+          />
+          <Image
+            className="h-[90px] w-48 mt-16"
+            contentFit="cover"
+            source={require("../assets/leader-heading.svg")}
+          />
+          <Image
+            className="h-48 w-16 rotate-180 mt-3"
+            contentFit="cover"
+            source={require("../assets/leaderboard-header.svg")}
+          />
+        </View>
 
-    <View className="flex-row justify-between w-full mt-[10%]">
-    <Image
-        className="h-48 w-16"
-        contentFit="cover"
-        source={require("../assets/leaderboard-header.svg")}
-      />
-      <Image
-        className="h-[90px] w-48 mt-[20%]"
-        contentFit="cover"
-        source={require("../assets/leader-heading.svg")}
-      />
-       <Image
-        className="h-48 w-16 rotate-180"
-        contentFit="cover"
-        source={require("../assets/leaderboard-header.svg")}
-      />
-    </View>
+        <View className="flex-row w-full justify-around mt-[5px]">
+          <Text className="text-[#d8d8d8] text-[20px] text-center font-bold">
+            Your Score: {userScore}
+          </Text>
+        </View>
 
-{/* Ranks and Points Header */}
-    <View className="flex-row justify-around mt-[60px]">
-        <Text className="text-[#43FFFF] text-[20px] text-center">
-            RANK
-        </Text>
-        <Text className="text-[#43FFFF] text-[20px] text-center">
-            POINTS
-        </Text>
-    </View>
+        {/* Ranks and Points Header */}
+        <View className="flex-row w-full justify-around mt-[10px]">
+          <Text className="text-[#43FFFF] text-[15px] text-center">RANK</Text>
+          <Text className="text-[#43FFFF] text-[15px] text-center">POINTS</Text>
+        </View>
 
+        {/* Top 3 teams */}
+        <View className="w-full h-[60%] mt-3">
+          <ScrollView className="flex-col mx-auto w-full">
+            {/* // show only first 3. make sure the case when the available teams is less than 3 */}
 
+            {teams
+              .filter((_, i) => i < 3)
+              .map((team, i) => (
+                <Top3Teams index={i + 1} key={i} team={team} />
+              ))}
 
-{/* Top 3 teams */}
-<View className="flex-col gap-2 justify-center mx-auto w-full">
-    <View className="w-full mx-auto">
-    <Image
-        className="h-16 w-[90%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leadertop.png")}
-      />
-
-      <View className="flex-row justify-around px-auto absolute top-[23px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">1. TEAM A</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
+            {teams
+              .filter((_, i) => i >= 3)
+              .map((team, i) => (
+                <Next3Teams index={i + 4} key={i} team={team} />
+              ))}
+          </ScrollView>
+        </View>
+        <TouchableOpacity
+          className="absolute flex flex-row p-3 items-center gap-x-5 bg-secondary rounded-xl justify-center bottom-5"
+          onPress={async () => {
+            try {
+              ToastAndroid.show("Refreshing...", ToastAndroid.SHORT);
+              const t = await getGlobalLeaderBoard();
+              setTeams(t);
+            } catch (e) {
+              console.log("error", e);
+            }
+            ToastAndroid.show("Refreshed", ToastAndroid.SHORT);
+          }}
+        >
+          <Image
+            className="h-8 w-8"
+            contentFit="cover"
+            source={require("../assets/refresh.svg")}
+          />
+          <Text className="text-white text-xl mr-3">Refresh</Text>
+        </TouchableOpacity>
       </View>
-    </View>
-
-    <View className="w-full mx-auto">
-    <Image
-        className="h-16 w-[90%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leadertop.png")}
-      />
-
-      <View className="flex-row justify-around px-auto absolute top-[23px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">2. TEAM B</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
-      </View>
-    </View>
-
-   <View className="w-full mx-auto">
-    <Image
-        className="h-16 w-[90%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leadertop.png")}
-      />
-
-      <View className="flex-row justify-around px-auto absolute top-[23px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">3. TEAM C</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
-      </View>
-    </View>
-</View>
-
-
-{/* Next 3 Teams */}
-<View className="flex gap-2 mt-[10px]">
-
-<View className="w-full mx-auto">
-    <Image
-        className="h-8 w-[80%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leaderbottom.svg")}
-      />
-
-      <View className="flex-row justify-around px-auto absolute top-[5px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">4. TEAM D</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
-      </View>
-    </View>
-
-
-    <View className="w-full mx-auto">
-    <Image
-        className="h-8 w-[80%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leaderbottom.svg")}
-      />
-      <View className="flex-row justify-around px-auto absolute top-[5px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">5. TEAM E</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
-      </View>
-    </View>
-
-
-    <View className="w-full mx-auto">
-    <Image
-        className="h-8 w-[80%] mx-auto"
-        contentFit="cover"
-        source={require("../assets/leaderbottom.svg")}
-      />
-
-      <View className="flex-row justify-around px-auto absolute top-[5px] left-[20%]">
-      <Text className="text-[#43FFFF] text-[14px] text-center mr-[98px] ml-[2px]">6. TEAM F</Text>
-      <Text className="text-[#43FFFF] text-[14px] text-center">0</Text>
-      </View>
-    </View>
-</View>
-
-
-{/* Navigation Bar (bottom) */}
-<View className="bg-white absolute bottom-[10px] w-[100%] h-[5%] rounded-2xl flex-row justify-around items-center">
-    <TouchableOpacity className="w-[45%] flex-row justify-around items-center">
-    <Image
-        className="h-4 w-4 mx-auto my-auto"
-        contentFit="cover"
-        source={require("../assets/percentage.svg")}
-      />
-      <Text className="text-black text-[12px]"> Progress </Text>
-    </TouchableOpacity>
-
-    
-    <Image
-        className="h-6 w-4 mx-auto my-auto"
-        contentFit="cover"
-        source={require("../assets/bars-leader.svg")}
-      />
-
-<TouchableOpacity className="w-[45%] flex-row items-center justify-around mr-[5px]">
-    <Image
-        className="h-4 w-4 mx-auto"
-        contentFit="cover"
-        source={require("../assets/list.svg")}
-      />
-      <Text className="text-black text-[12px]"> Leaderboard </Text>
-
-    </TouchableOpacity>
-</View>
-
-
-    </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
 export default LeaderBoard;
