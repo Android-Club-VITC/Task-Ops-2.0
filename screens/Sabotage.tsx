@@ -9,14 +9,14 @@ import React, { useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
-import { getGlobalLeaderBoard, getTeamById } from "../api/teams";
 import { Team } from "../api/models";
 import { Button } from "react-native-elements";
+import { getActiveTeamsToSabotage } from "../api/getActiveTeams";
+import { sabotageTeam } from "../api/assignSabotage";
 
 export default function Sabotage() {
   const { userId } = React.useContext(UserContext);
-  const [teams, setTeams] = useState<Team[]>();
-  const [canSabotage, setCanSabotage] = useState(true);
+  const [teams, setTeams] = useState<Team[]>([]);
 
   useEffect(() => {
     fetchSabotageStatus();
@@ -24,21 +24,23 @@ export default function Sabotage() {
 
   const fetchSabotageStatus = async () => {
     try {
-      const loggedInTeam = await getTeamById(userId ?? "");
-      //   setCanSabotage(loggedInTeam?.can_sabotage ?? false);
-      setCanSabotage(true);
-
-      const t = await getGlobalLeaderBoard();
-      setTeams(t.filter((team) => team.name !== loggedInTeam?.name));
+      ToastAndroid.show("Fetching sabotage status", ToastAndroid.SHORT);
+      setTeams(await getActiveTeamsToSabotage(userId || ""));
     } catch (e) {
       console.log("error", e);
     }
+    ToastAndroid.show("Fetched sabotage status", ToastAndroid.SHORT);
   };
 
-  const sabotageTeam = async (teamName: string) => {
-    if (!canSabotage) return;
-    // call teh method
-    const res = await sabotageTeam(teamName);
+  const sabotageTeamFunc = async (teamName: string) => {
+    ToastAndroid.show("Sabotaging team", ToastAndroid.SHORT);
+    try {
+      await sabotageTeam(teamName, userId as string);
+
+      ToastAndroid.show("Sabotaged team", ToastAndroid.SHORT);
+    } catch (e) {
+      ToastAndroid.show("Error in sabotaging team", ToastAndroid.SHORT);
+    }
   };
 
   return (
@@ -62,7 +64,7 @@ export default function Sabotage() {
           />
         </View>
         <View>
-          {canSabotage ? (
+          {teams!.length > 0 ? (
             <View>
               <Text>Select Team to sabotage</Text>
               <View className="w-full h-[60%] mt-3">
@@ -73,7 +75,9 @@ export default function Sabotage() {
                       <Text className="text-white">
                         {index + 1} {item.name}
                       </Text>
-                      <Button onPress={() => sabotageTeam(item.name)}></Button>
+                      <Button
+                        onPress={() => sabotageTeamFunc((item as any).id)}
+                      ></Button>
                     </View>
                   )}
                 />

@@ -80,6 +80,8 @@ export const submitCodeForTask = async (
       return errorResponse(`No user found with id ${team_id}`);
     }
 
+    delete (team as any).id;
+
     // Check if sabotaged and but you are submitting a normal task
     if (team.is_sabotaged) {
       const isCurrTaskToBeSubmittedIsSabotaged = team.sabotage_tasks.find(
@@ -118,8 +120,9 @@ export const submitCodeForTask = async (
         } else {
           // update the db
           const index = team.sabotage_tasks.findIndex((t) => t.id === task.id);
-          team.sabotage_tasks[index].status = "completed";
-          team.sabotage_tasks[index].points = points;
+          // TODO: CHECKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK
+          // team.sabotage_tasks[index].status = "completed";
+          // team.sabotage_tasks[index].points = points;
           team.recently_solved_timestamp = new Date().toUTCString();
           team.total_score += points;
           team.is_sabotaged = false;
