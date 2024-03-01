@@ -35,9 +35,10 @@ export default function Sabotage() {
     }
   };
 
-  const sabotageTeam = (teamName: string) => {
+  const sabotageTeam = async (teamName: string) => {
     if (!canSabotage) return;
     // call teh method
+    const res = await sabotageTeam(teamName);
   };
 
   return (

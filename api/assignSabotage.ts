@@ -1,11 +1,13 @@
 import { doc, updateDoc, runTransaction, getDoc } from "firebase/firestore";
 import { db, teams } from "../firebaseConfig";
-function getRandomTask(tasks: SabotageTask[]): SabotageTask {
+import { Task } from "./models";
+
+function getRandomTask(tasks: Task[]): Task {
   const randomIndex = Math.floor(Math.random() * tasks.length);
   return tasks[randomIndex];
 }
 
-async function sabotageTeam(teamId: string, sabotageTasks: SabotageTask[]) {
+async function sabotageTeam(teamId: string, sabotageTasks: Task[]) {
   const teamRef = doc(teams, teamId);
   try {
     await runTransaction(db, async (transaction) => {
