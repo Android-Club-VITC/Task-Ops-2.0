@@ -124,7 +124,7 @@ export const submitCodeForTask = async (
           // team.sabotage_tasks[index].status = "completed";
           // team.sabotage_tasks[index].points = points;
           team.recently_solved_timestamp = new Date().toUTCString();
-          team.total_score += points;
+          // team.total_score += points;
           team.is_sabotaged = false;
 
           // update firebase db
