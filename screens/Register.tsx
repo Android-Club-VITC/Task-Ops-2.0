@@ -67,7 +67,9 @@ const Register = () => {
         label={"SUBMIT"}
         TextColor={"black"}
         Margin={40}
-        Press={() => {}}
+        Press={() => {
+          submit();
+        }}
       />
     </Background>
   );

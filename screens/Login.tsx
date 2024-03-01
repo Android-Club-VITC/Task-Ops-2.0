@@ -60,7 +60,9 @@ const Login = () => {
           label={"SUBMIT"}
           TextColor={"black"}
           Margin={100}
-          Press={() => {}}
+          Press={() => {
+            submit();
+          }}
         />
       </View>
     </Background>

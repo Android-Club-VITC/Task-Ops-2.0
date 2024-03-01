@@ -13,91 +13,127 @@ import LeaderBoard from "./screens/LeaderBoard";
 import Progress from "./screens/Progress";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { Task } from "./api/models";
+import { TaskContext } from "./context/TaskContext";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const HomeStack = createNativeStackNavigator();
 
 export default function App() {
   const [userId, setUserId] = useState<string | null>(null);
+  const [taskInfo, setTaskInfo] = useState<
+    (Task & { initialTime: number }) | null
+  >(null);
   const { getItem, setItem, removeItem } = useAsyncStorage("@user_id");
+  const {
+    getItem: getTask,
+    setItem: setTask,
+    removeItem: removeTask,
+  } = useAsyncStorage("@task_info");
 
   useEffect(() => {
     async function fn() {
       const id = await getItem();
+      const task = await getTask();
+      if (task) setTaskInfo(JSON.parse(task));
       setUserId(id);
     }
     fn();
   }, []);
 
   return (
-    <UserContext.Provider
+    <TaskContext.Provider
       value={{
-        setUserId: async (userId) => {
-          if (!userId) {
-            await removeItem();
-            setUserId(null);
+        setTaskInfo: async (
+          taskInfo: (Task & { initialTime: number }) | null
+        ) => {
+          if (!taskInfo) {
+            await removeTask();
+            setTaskInfo(null);
             return;
           }
-          await setItem(userId);
-          setUserId(userId);
+
+          await setTask(JSON.stringify(taskInfo));
+          setTaskInfo(taskInfo);
+          return;
         },
-        userId,
+        taskInfo,
       }}
     >
-      <NavigationContainer>
-        {userId ? (
-          <Tab.Navigator
-            screenOptions={{
-              headerShown: false,
-              tabBarActiveTintColor: "#000000",
-              tabBarInactiveTintColor: "lightgray",
-            }}
-            initialRouteName={"Tasks"}
-          >
-            {/* <Tab.Screen
-              name="Home"
-              component={Home}
-              options={{
-                tabBarLabel: "Home",
-                tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="home" color={color} size={size} />
-                ),
+      <UserContext.Provider
+        value={{
+          setUserId: async (userId) => {
+            if (!userId) {
+              await removeItem();
+              setUserId(null);
+              return;
+            }
+            await setItem(userId);
+            setUserId(userId);
+          },
+          userId,
+        }}
+      >
+        <NavigationContainer>
+          {userId ? (
+            <HomeStack.Navigator
+              screenOptions={{
+                headerShown: false,
               }}
-            /> */}
-            <Tab.Screen
-              name="Tasks"
-              component={Progress}
-              options={{
-                tabBarLabel: "Tasks",
-                tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="list" color={color} size={size} />
-                ),
+            >
+              {taskInfo ? (
+                <HomeStack.Screen name="TaskPage" component={TaskPage} />
+              ) : (
+                <HomeStack.Screen name="Home">
+                  {() => (
+                    <Tab.Navigator
+                      screenOptions={{
+                        headerShown: false,
+                        tabBarActiveTintColor: "#000000",
+                        tabBarInactiveTintColor: "lightgray",
+                      }}
+                      initialRouteName={"Tasks"}
+                    >
+                      <Tab.Screen
+                        name="Tasks"
+                        component={Progress}
+                        options={{
+                          tabBarLabel: "Tasks",
+                          tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="list" color={color} size={size} />
+                          ),
+                        }}
+                      />
+                      <Tab.Screen
+                        name="Leaderboard"
+                        component={LeaderBoard}
+                        options={{
+                          tabBarLabel: "Leaderboard",
+                          tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="flag" color={color} size={size} />
+                          ),
+                        }}
+                      />
+                    </Tab.Navigator>
+                  )}
+                </HomeStack.Screen>
+              )}
+            </HomeStack.Navigator>
+          ) : (
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
               }}
-            />
-            <Tab.Screen
-              name="Leaderboard"
-              component={LeaderBoard}
-              options={{
-                tabBarLabel: "Leaderboard",
-                tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="flag" color={color} size={size} />
-                ),
-              }}
-            />
-          </Tab.Navigator>
-        ) : (
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="Landing" component={Landing} />
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
-        )}
-        <StatusBar style="auto" />
-      </NavigationContainer>
-    </UserContext.Provider>
+            >
+              <Stack.Screen name="Landing" component={Landing} />
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Register" component={Register} />
+            </Stack.Navigator>
+          )}
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      </UserContext.Provider>
+    </TaskContext.Provider>
   );
 }

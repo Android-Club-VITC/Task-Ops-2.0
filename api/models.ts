@@ -19,7 +19,7 @@ export interface Team {
   can_sabotage: boolean;
   normal_tasks: Task[];
   final_tasks: Task[];
-  recently_solved_timestamp: number;
+  recently_solved_timestamp: string;
 }
 
 export interface Round {

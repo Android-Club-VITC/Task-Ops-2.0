@@ -59,7 +59,7 @@ const normalTaskList = [
 
 const finalTaskList = [
   {
-    id: 1,
+    id: 10,
     name: "Final Task 1",
     description: "Do something",
     points: 0,
@@ -67,7 +67,7 @@ const finalTaskList = [
     status: "not-opened",
   },
   {
-    id: 2,
+    id: 11,
     name: "Final Task 2",
     description: "Do something",
     points: 0,
@@ -75,7 +75,7 @@ const finalTaskList = [
     status: "not-opened",
   },
   {
-    id: 3,
+    id: 12,
     name: "Final Task 3",
     description: "Do something",
     points: 0,
@@ -86,7 +86,7 @@ const finalTaskList = [
 
 const sabotageTaskList = [
   {
-    id: 1,
+    id: 8,
     name: "Sabotage Task 1",
     description: "Do something",
     points: 0,
@@ -94,7 +94,7 @@ const sabotageTaskList = [
     status: "not-opened",
   },
   {
-    id: 2,
+    id: 9,
     name: "Sabotage Task 2",
     description: "Do something",
     points: 0,

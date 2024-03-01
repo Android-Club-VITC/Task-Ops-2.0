@@ -20,4 +20,4 @@ const tasks = collection(db, "Tasks");
 const teams = collection(db, "Teams");
 const rounds = collection(db, "Rounds");
 
-export { app, tasks, teams, rounds };
+export { db, app, tasks, teams, rounds };
