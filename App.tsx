@@ -15,6 +15,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import { Task } from "./api/models";
 import { TaskContext } from "./context/TaskContext";
+import Sabotage from "./screens/Sabotage";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -112,6 +113,16 @@ export default function App() {
                           tabBarLabel: "Leaderboard",
                           tabBarIcon: ({ color, size }) => (
                             <Ionicons name="flag" color={color} size={size} />
+                          ),
+                        }}
+                      />
+                      <Tab.Screen
+                        name="Sabotage"
+                        component={Sabotage}
+                        options={{
+                          tabBarLabel: "Sabotage",
+                          tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="skull" color={color} size={size} />
                           ),
                         }}
                       />
