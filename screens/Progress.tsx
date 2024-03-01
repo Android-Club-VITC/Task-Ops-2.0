@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import * as React from "react";
@@ -16,11 +17,18 @@ import TaskIncomplete from "../components/TaskIncomplete";
 import { Task } from "../api/models";
 import { getTasksForTeam } from "../api/tasks";
 import { UserContext } from "../context/UserContext";
+import { TaskContext } from "../context/TaskContext";
+import { RandomlyShuffle } from "../utils/helpers";
 
 const Progress = () => {
   const [activity, setActivity] = useState<Task[]>([]);
   const { userId } = React.useContext(UserContext);
   const [isSabotaged, setIsSabotaged] = useState(false);
+  const { setTaskInfo, taskInfo } = React.useContext(TaskContext);
+
+  React.useEffect(() => {
+    updateTasks();
+  }, []);
 
   const updateTasks = async () => {
     if (!userId) {
@@ -53,12 +61,12 @@ const Progress = () => {
             source={require("../assets/leaderboard-header.svg")}
           />
           <Image
-            className="h-8 w-48 mt-3"
+            className="h-8 w-48 mt-5"
             contentFit="cover"
             source={require("../assets/progress-header.svg")}
           />
           <Image
-            className="h-48 w-16 rotate-180 mt-2"
+            className="h-48 w-16 rotate-180 mt-5"
             contentFit="cover"
             source={require("../assets/leaderboard-header.svg")}
           />
@@ -73,7 +81,7 @@ const Progress = () => {
         )}
         <View className="w-full h-[60%] mt-3">
           <FlatList
-            data={activity}
+            data={RandomlyShuffle(activity)}
             renderItem={({ item, index }) =>
               item.status === "completed" ? (
                 <TaskCompleted
@@ -83,6 +91,12 @@ const Progress = () => {
                 />
               ) : (
                 <TaskIncomplete
+                  onPress={() => {
+                    setTaskInfo({
+                      ...item,
+                      initialTime: 0,
+                    });
+                  }}
                   key={index}
                   taskName={String(index + 1)}
                   taskId={item.id}

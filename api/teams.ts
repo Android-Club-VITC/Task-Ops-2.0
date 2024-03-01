@@ -36,7 +36,7 @@ export async function registerTeam(
     sabotage_tasks: [...sabotageTaskList],
     normal_tasks: [...normalTaskList],
     final_tasks: [...finalTaskList],
-    recently_solved_timestamp: new Date().getUTCSeconds(),
+    recently_solved_timestamp: new Date().toUTCString(),
   };
 
   try {
@@ -77,10 +77,10 @@ export const getGlobalLeaderBoard = async () => {
   const d = data
     .sort((a, b) => {
       if (a.data().total_score === b.data().total_score) {
-        return (
-          a.data().recently_solved_timestamp -
-          b.data().recently_solved_timestamp
-        );
+        const x = new Date(a.data().recently_solved_timestamp);
+        const y = new Date(b.data().recently_solved_timestamp);
+
+        return x < y ? -1 : x > y ? 1 : 0;
       }
       return b.data().total_score - a.data().total_score;
     })

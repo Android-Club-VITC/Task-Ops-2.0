@@ -2,15 +2,14 @@ import { Text, TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import * as React from "react";
 
-const TaskIncomplete: React.FC<{ taskId: number; taskName: string }> = ({
-  taskId,
-  taskName,
-}) => {
+const TaskIncomplete: React.FC<{
+  taskId: number;
+  taskName: string;
+  onPress: () => void;
+}> = ({ taskId, taskName, onPress }) => {
   return (
     <TouchableOpacity
-      onPress={() => {
-        console.log("Task Incomplete");
-      }}
+      onPress={onPress}
       className="flex items-center justify-center w-full overflow-visible mt-5"
     >
       <Image
