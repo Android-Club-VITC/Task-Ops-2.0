@@ -67,17 +67,18 @@ export default function Sabotage() {
           {teams!.length > 0 ? (
             <View>
               <Text>Select Team to sabotage</Text>
-              <View className="w-full h-[60%] mt-3">
+              <View className="w-full h-[70%] mt-3 flex flex-col">
                 <FlatList
                   data={teams}
                   renderItem={({ item, index }) => (
-                    <View className="flex">
-                      <Text className="text-white">
-                        {index + 1} {item.name}
-                      </Text>
+                    <View className="flex flex-row items-center m-2">
                       <Button
+                        className="m-2 p-2"
                         onPress={() => sabotageTeamFunc((item as any).id)}
                       ></Button>
+                      <Text className="text-white ml-6">
+                        {index + 1}. {item.name}
+                      </Text>
                     </View>
                   )}
                 />
